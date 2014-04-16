@@ -621,9 +621,6 @@ public class SimpleLogin {
     b.appendQueryParameter("mobile", "android");
                b.appendQueryParameter("transport", "json");
 
-        if (options.isDebug()) {
-            b.appendQueryParameter("debug", "1");
-        }
 
     if (data != null) {
       for (Map.Entry<String, String> entry : data.entrySet()) {
