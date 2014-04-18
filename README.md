@@ -51,7 +51,7 @@ status:
 
 ```java
 authClient.checkAuthStatus(new SimpleLoginAuthenticatedHandler() {
-  public void authenticated(Error error, User user) {
+  public void authenticated(FirebaseSimpleLoginError error, FirebaseSimpleLoginUser user) {
     if (error != null) {
       // Oh no! There was an error performing the check
     } else if (user == null) {
@@ -79,7 +79,7 @@ If the user is logged out, try authenticating using the provider of your choice:
 
 ```java
 authClient.loginWithEmail("email@example.com", "very secret", new SimpleLoginAuthenticatedHandler() {
-  public void authenticated(Error error, User user) {
+  public void authenticated(FirebaseSimpleLoginError error, FirebaseSimpleLoginUser user) {
     if(error != null) {
       // There was an error logging into this account
     }
@@ -93,7 +93,7 @@ authClient.loginWithEmail("email@example.com", "very secret", new SimpleLoginAut
 ## Testing / Compiling From Source
 
 Interested in manually debugging from source, or submitting a pull request?
-Don't forget to read the [Contribution Guidelines](../CONTRIBUTING.md) .
+Don't forget to read the [Contribution Guidelines](https://github.com/firebase/firebase-simple-login-java/blob/master/CONTRIBUTING.md).
 
 License
 -------

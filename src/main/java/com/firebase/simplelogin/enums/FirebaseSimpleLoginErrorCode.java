@@ -1,15 +1,6 @@
 package com.firebase.simplelogin.enums;
 
-/**
- * Error codes that can be returned from Firebase. See more details here:
- *
- * <a href="https://www.firebase.com/docs/security/simple-login-java-overview.html">https://www.firebase.com/docs/security/simple-login-java-overview.html</a>.
- *
- * @author Firebase
- *
- */
-public enum Error {
-  // Auth errors
+public enum FirebaseSimpleLoginErrorCode {
   /**
    * The specified user does not exist.
    */
