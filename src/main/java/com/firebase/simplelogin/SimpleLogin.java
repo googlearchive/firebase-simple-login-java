@@ -40,11 +40,12 @@ import com.firebase.client.Firebase;
 import com.firebase.client.Firebase.AuthListener;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.firebase.simplelogin.enums.Error;
+import com.firebase.simplelogin.enums.FirebaseSimpleLoginErrorCode;
 import com.firebase.simplelogin.enums.Provider;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,13 +71,13 @@ import java.util.Map;
  * });
  * </code></pre>
  *
- * Use the checkAuthStatus() method to retrieve the User object of the logged in user.
+ * Use the checkAuthStatus() method to retrieve the FirebaseSimpleLoginUser object of the logged in user.
  *
  * <pre><code>
  * SimpleLogin simpleLogin = new SimpleLogin(f, this);
  * final SimpleLoginAuthenticatedHandler simpleLoginAuthenticatedHandler = new SimpleLoginAuthenticatedHandler() {
  *  &#064;Override
- *  public void authenticated(Error error, User user) {
+ *  public void authenticated(FirebaseSimpleLoginError error, FirebaseSimpleLoginUser user) {
  *    System.out.println("Error: " + error);
  *    System.out.println("User: " + user);
  *    System.out.println("3rdP: " + user.getThirdPartyUserData());
@@ -196,12 +197,12 @@ public class SimpleLogin {
         }
       }
       else {
-        handler.authenticated(FirebaseUtils.errorFromResponse(null), null);
+        handler.authenticated(FirebaseSimpleLoginError.errorFromResponse(null), null);
       }
     }
     catch(Exception e) {
       e.printStackTrace();
-      handler.authenticated(FirebaseUtils.errorFromResponse(null), null);
+      handler.authenticated(FirebaseSimpleLoginError.errorFromResponse(null), null);
     }
   }
 
@@ -223,7 +224,7 @@ public class SimpleLogin {
       HashMap<String, String> data = new HashMap<String, String>();
       makeRequest(Constants.FIREBASE_AUTH_ANONYMOUS_PATH, data, new RequestHandler() {
 
-        public void handle(Error error, JSONObject data) {
+        public void handle(FirebaseSimpleLoginError error, JSONObject data) {
           if (error != null) {
             completionHandler.authenticated(error, null);
           }
@@ -232,13 +233,13 @@ public class SimpleLogin {
               String token = data.has("token") ? data.getString("token") : null;
               if (token == null) {
                 JSONObject errorDetails = data.has("error") ? data.getJSONObject("error") : null;
-                Error theError = FirebaseUtils.errorFromResponse(errorDetails);
+                FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(errorDetails);
                 completionHandler.authenticated(theError, null);
               }
               else {
                 JSONObject userData = data.has("user") ? data.getJSONObject("user") : null;
                 if (userData == null) {
-                  Error theError = FirebaseUtils.errorFromResponse(null);
+                  FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(null);
                   completionHandler.authenticated(theError, null);
                 }
                 else {
@@ -248,7 +249,7 @@ public class SimpleLogin {
             }
             catch (Exception e) {
               e.printStackTrace();
-              Error theError = FirebaseUtils.errorFromResponse(null);
+              FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(null);
               completionHandler.authenticated(theError, null);
             }
           }
@@ -277,8 +278,7 @@ public class SimpleLogin {
       data.put("password", password);
 
       makeRequest(Constants.FIREBASE_AUTH_PASSWORD_PATH, data, new RequestHandler() {
-
-        public void handle(Error error, JSONObject data) {
+        public void handle(FirebaseSimpleLoginError error, JSONObject data) {
           if (error != null) {
             completionHandler.authenticated(error, null);
           }
@@ -287,13 +287,13 @@ public class SimpleLogin {
               String token = data.has("token") ? data.getString("token") : null;
               if (token == null) {
                 JSONObject errorDetails = data.has("error") ? data.getJSONObject("error") : null;
-                Error theError = FirebaseUtils.errorFromResponse(errorDetails);
+                FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(errorDetails);
                 completionHandler.authenticated(theError, null);
               }
               else {
                 JSONObject userData = data.has("user") ? data.getJSONObject("user") : null;
                 if (userData == null) {
-                  Error theError = FirebaseUtils.errorFromResponse(null);
+                  FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(null);
                   completionHandler.authenticated(theError, null);
                 }
                 else {
@@ -303,7 +303,7 @@ public class SimpleLogin {
             }
             catch (Exception e) {
               e.printStackTrace();
-              Error theError = FirebaseUtils.errorFromResponse(null);
+              FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(null);
               completionHandler.authenticated(theError, null);
             }
           }
@@ -317,7 +317,7 @@ public class SimpleLogin {
     this.ref.auth(token, new AuthListener() {
 
       public void onAuthSuccess(Object authData) {
-        User user = saveSession(token, provider, userData);
+        FirebaseSimpleLoginUser user = saveSession(token, provider, userData);
         if (user != null) {
           final Firebase authRef = ref.getRoot().child(".info/authenticated");
           final ValueEventListener authValueEventListener = new ValueEventListener() {
@@ -337,36 +337,37 @@ public class SimpleLogin {
           completionHandler.authenticated(null, user);
         }
         else {
-          completionHandler.authenticated(FirebaseUtils.errorFromResponse(null), null);
+          completionHandler.authenticated(FirebaseSimpleLoginError.errorFromResponse(null), null);
         }
 
       }
 
       public void onAuthRevoked(FirebaseError error) {
         clearCredentials();
-        completionHandler.authenticated(FirebaseUtils.errorFromFirebaseError(error), null);
+        completionHandler.authenticated(FirebaseSimpleLoginError.errorFromFirebaseError(error), null);
       }
 
       public void onAuthError(FirebaseError error) {
-        completionHandler.authenticated(FirebaseUtils.errorFromFirebaseError(error), null);
+        completionHandler.authenticated(FirebaseSimpleLoginError.errorFromFirebaseError(error), null);
       }
     });
   }
 
-  private User saveSession(String token, Provider provider, JSONObject userData) {
+  private FirebaseSimpleLoginUser saveSession(String token, Provider provider, JSONObject userData) {
     clearCredentials();
-    User user = null;
+    FirebaseSimpleLoginUser user = null;
     try {
       String userId = userData.has("id") ? userData.getString("id") : null;
       if (userId != null) {
         if(provider == Provider.PASSWORD) {
           String email = userData.has("email") ? userData.getString("email") : null;
+          boolean isTemporaryPassword = userData.has("isTemporaryPassword") ? userData.getBoolean("isTemporaryPassword") : false;
           if(email != null) {
-            user = new User(userId, userData.getString("uid"), token, email);
+            user = new FirebaseSimpleLoginUser(userId, userData.getString("uid"), token, email, isTemporaryPassword);
           }
         }
         else {
-          user = new User(userId, userData.getString("uid"), provider, token, FirebaseUtils.toMap(userData));
+          user = new FirebaseSimpleLoginUser(userId, userData.getString("uid"), provider, token, FirebaseUtils.toMap(userData));
         }
       }
     }
@@ -412,7 +413,7 @@ public class SimpleLogin {
       data.put("password", password);
 
       makeRequest(Constants.FIREBASE_AUTH_CREATEUSER_PATH, data, new RequestHandler() {
-        public void handle(Error error, JSONObject data) {
+        public void handle(FirebaseSimpleLoginError error, JSONObject data) {
           if (error != null) {
             completionHandler.authenticated(error, null);
           }
@@ -421,24 +422,24 @@ public class SimpleLogin {
               JSONObject errorDetails = data.has("error") ? data.getJSONObject("error") : null;
               JSONObject userData = data.has("user") ? data.getJSONObject("user") : null;
               if (errorDetails != null) {
-                Error theError = FirebaseUtils.errorFromResponse(errorDetails);
+                FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(errorDetails);
                 completionHandler.authenticated(theError, null);
               }
               else if (userData == null) {
-                Error theError = FirebaseUtils.errorFromResponse(null);
+                FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(null);
                 completionHandler.authenticated(theError, null);
               }
               else {
                 String userId = userData.getString("id");
                                 String uid = userData.getString("uid");
                                 String email = userData.getString("email");
-                User user = new User(userId, uid, null, email);
+                FirebaseSimpleLoginUser user = new FirebaseSimpleLoginUser(userId, uid, null, email, false);
                 completionHandler.authenticated(null, user);
               }
             }
             catch (Exception e) {
               e.printStackTrace();
-              Error theError = FirebaseUtils.errorFromResponse(null);
+              FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(null);
               completionHandler.authenticated(theError, null);
             }
           }
@@ -456,7 +457,7 @@ public class SimpleLogin {
    */
   public void removeUser(String email, String password, final SimpleLoginCompletionHandler handler) {
     final SimpleLoginAuthenticatedHandler authHandler = new SimpleLoginAuthenticatedHandler() {
-      public void authenticated(Error error, User user) {
+      public void authenticated(FirebaseSimpleLoginError error, FirebaseSimpleLoginUser user) {
         handler.completed(error, false);
       }
     };
@@ -473,7 +474,7 @@ public class SimpleLogin {
       data.put("password", password);
 
       makeRequest(Constants.FIREBASE_AUTH_REMOVEUSER_PATH, data, new RequestHandler() {
-        public void handle(Error error, JSONObject data) {
+        public void handle(FirebaseSimpleLoginError error, JSONObject data) {
           if(error != null) {
             handler.completed(error, false);
           }
@@ -481,7 +482,7 @@ public class SimpleLogin {
             try {
               JSONObject errorDetails = data.has("error") ? data.getJSONObject("error") : null;
               if(errorDetails != null) {
-                handler.completed(FirebaseUtils.errorFromResponse(errorDetails), false);
+                handler.completed(FirebaseSimpleLoginError.errorFromResponse(errorDetails), false);
               }
               else {
                 handler.completed(null, true);
@@ -489,7 +490,7 @@ public class SimpleLogin {
             }
             catch(Exception e) {
               e.printStackTrace();
-              Error theError = FirebaseUtils.errorFromResponse(null);
+              FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(null);
               handler.completed(theError, false);
             }
           }
@@ -508,7 +509,7 @@ public class SimpleLogin {
    */
   public void changePassword(final String email, final String oldPassword, final String newPassword, final SimpleLoginCompletionHandler handler) {
     final SimpleLoginAuthenticatedHandler authHandler = new SimpleLoginAuthenticatedHandler() {
-      public void authenticated(Error error, User user) {
+      public void authenticated(FirebaseSimpleLoginError error, FirebaseSimpleLoginUser user) {
         handler.completed(error, false);
       }
     };
@@ -526,7 +527,7 @@ public class SimpleLogin {
       data.put("newPassword", newPassword);
 
       makeRequest(Constants.FIREBASE_AUTH_CHANGEPASSWORD_PATH, data, new RequestHandler() {
-        public void handle(Error error, JSONObject data) {
+        public void handle(FirebaseSimpleLoginError error, JSONObject data) {
           if(error != null) {
             handler.completed(error, false);
           }
@@ -546,7 +547,7 @@ public class SimpleLogin {
      */
     public void sendPasswordResetEmail(String email, final SimpleLoginCompletionHandler handler) {
       final SimpleLoginAuthenticatedHandler authHandler = new SimpleLoginAuthenticatedHandler() {
-        public void authenticated(Error error, User user) {
+        public void authenticated(FirebaseSimpleLoginError error, FirebaseSimpleLoginUser user) {
         handler.completed(error, false);
         }
       };
@@ -559,7 +560,7 @@ public class SimpleLogin {
         data.put("email", email);
 
         makeRequest(Constants.FIREBASE_AUTH_RESETPASSWORD_PATH, data, new RequestHandler() {
-          public void handle(Error error, JSONObject data) {
+          public void handle(FirebaseSimpleLoginError error, JSONObject data) {
             if(error != null) {
               handler.completed(error, false);
             }
@@ -567,7 +568,7 @@ public class SimpleLogin {
               try {
                 JSONObject errorDetails = data.has("error") ? data.getJSONObject("error") : null;
                 if(errorDetails != null) {
-                  handler.completed(FirebaseUtils.errorFromResponse(errorDetails), false);
+                  handler.completed(FirebaseSimpleLoginError.errorFromResponse(errorDetails), false);
                 }
                 else {
                   handler.completed(null, true);
@@ -575,7 +576,7 @@ public class SimpleLogin {
               }
               catch(Exception e) {
                 e.printStackTrace();
-                Error theError = FirebaseUtils.errorFromResponse(null);
+                FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(null);
                 handler.completed(theError, false);
               }
             }
@@ -588,7 +589,7 @@ public class SimpleLogin {
     new Handler().post(new Runnable() {
       public void run() {
         if(userHandler != null) {
-          userHandler.authenticated(Error.InvalidEmail, null);
+          userHandler.authenticated(FirebaseSimpleLoginError.errorFromCode(FirebaseSimpleLoginErrorCode.InvalidEmail), null);
         }
       }
     });
@@ -598,7 +599,7 @@ public class SimpleLogin {
     new Handler().post(new Runnable() {
       public void run() {
         if(userHandler != null) {
-          userHandler.authenticated(Error.InvalidPassword, null);
+          userHandler.authenticated(FirebaseSimpleLoginError.errorFromCode(FirebaseSimpleLoginErrorCode.InvalidPassword), null);
         }
       }
     });
@@ -608,7 +609,7 @@ public class SimpleLogin {
     new Handler().post(new Runnable() {
       public void run() {
         if(userHandler != null) {
-          userHandler.authenticated(Error.BadProviderToken, null);
+          userHandler.authenticated(FirebaseSimpleLoginError.errorFromCode(FirebaseSimpleLoginErrorCode.BadProviderToken), null);
         }
       }
     });
@@ -633,7 +634,7 @@ public class SimpleLogin {
   }
 
   /**
-   * Login to Firebase using a Facebook token. The returned User object will contain pertinent
+   * Login to Firebase using a Facebook token. The returned FirebaseSimpleLoginUser object will contain pertinent
    * Facebook data accessible with getThirdPartyUserData().
    *
    * @param appId Facebook app id.
@@ -653,7 +654,7 @@ public class SimpleLogin {
   }
 
     /**
-     * Login to Firebase using a Google access token. The returned User object will contain pertinent
+     * Login to Firebase using a Google access token. The returned FirebaseSimpleLoginUser object will contain pertinent
      * Google data accessible with getThirdPartyUserData().
      *
      * @param accessToken Access token returned by Facebook SDK.
@@ -672,7 +673,7 @@ public class SimpleLogin {
     }
 
     /**
-   * Login to Firebase using a Twitter token. The returned User object will contain pertinent
+   * Login to Firebase using a Twitter token. The returned FirebaseSimpleLoginUser object will contain pertinent
    * Twitter data accessible with getThirdPartyUserData().
    *
    * @param oauth_token Twitter oauth token.
@@ -696,7 +697,7 @@ public class SimpleLogin {
 
     private void loginWithToken(final String urlPath, final Provider provider, final HashMap<String, String> data, final SimpleLoginAuthenticatedHandler completionHandler) {
       makeRequest(urlPath, data, new RequestHandler() {
-        public void handle(Error error, JSONObject data) {
+        public void handle(FirebaseSimpleLoginError error, JSONObject data) {
           if (error != null) {
             completionHandler.authenticated(error, null);
           }
@@ -705,13 +706,13 @@ public class SimpleLogin {
               String token = data.has("token") ? data.getString("token") : null;
               if (token == null) {
                 JSONObject errorDetails = data.has("error") ? data.getJSONObject("error") : null;
-                Error theError = FirebaseUtils.errorFromResponse(errorDetails);
+                FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(errorDetails);
                 completionHandler.authenticated(theError, null);
               }
               else {
                 JSONObject userData = data.has("user") ? data.getJSONObject("user") : null;
                 if (userData == null) {
-                  Error theError = FirebaseUtils.errorFromResponse(null);
+                  FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(null);
                   completionHandler.authenticated(theError, null);
                 }
                 else {
@@ -721,7 +722,7 @@ public class SimpleLogin {
             }
             catch (Exception e) {
               e.printStackTrace();
-              Error theError = FirebaseUtils.errorFromResponse(null);
+              FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(null);
               completionHandler.authenticated(theError, null);
             }
           }
@@ -760,7 +761,7 @@ public class SimpleLogin {
       // Method is automatically called on main thread
       super.onPostExecute(result);
       if (result == null) {
-        handler.handle(Error.Unknown, null);
+        handler.handle(FirebaseSimpleLoginError.errorFromCode(FirebaseSimpleLoginErrorCode.Unknown), null);
       }
       else {
         handler.handle(null, result);

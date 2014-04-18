@@ -9,7 +9,7 @@ import java.util.Map;
  * returned from the Firebase authentication server. It includes a (userId, provider) tuple that is
  * unique. It will also include the token used to authenticate with Firebase.
  */
-public class User {
+public class FirebaseSimpleLoginUser {
 
   private String userId;
 
@@ -21,6 +21,8 @@ public class User {
 
   private String email;
 
+  private boolean isTemporaryPassword;
+
   private Map<String, Object> thirdPartyUserData;
 
   /**
@@ -30,13 +32,14 @@ public class User {
    * @param authToken
    * @param email
    */
-  User(String userId, String uid, String authToken, String email) {
+  FirebaseSimpleLoginUser(String userId, String uid, String authToken, String email, boolean isTemporaryPassword) {
     super();
     this.userId = userId;
-        this.uid = uid;
+    this.uid = uid;
     this.provider = Provider.PASSWORD;
     this.authToken = authToken;
     this.email = email;
+    this.isTemporaryPassword = isTemporaryPassword;
     this.thirdPartyUserData = new HashMap<String, Object>();
   }
 
@@ -48,10 +51,10 @@ public class User {
    * @param authToken
    * @param thirdPartyUserData
    */
-  User(String userId, String uid, Provider provider, String authToken, Map<String, Object> thirdPartyUserData) {
+  FirebaseSimpleLoginUser(String userId, String uid, Provider provider, String authToken, Map<String, Object> thirdPartyUserData) {
     super();
     this.userId = userId;
-        this.uid = uid;
+    this.uid = uid;
     this.provider = provider;
     this.authToken = authToken;
     this.thirdPartyUserData = thirdPartyUserData;

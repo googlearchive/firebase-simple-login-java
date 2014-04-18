@@ -1,20 +1,13 @@
 package com.firebase.simplelogin;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import com.firebase.client.Firebase;
+import com.firebase.simplelogin.enums.Provider;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.simplelogin.enums.Error;
-import com.firebase.simplelogin.enums.Provider;
+import java.net.URL;
+import java.util.*;
 
 class FirebaseUtils {
 
@@ -51,83 +44,6 @@ class FirebaseUtils {
     else {
       return Provider.INVALID;
     }
-  }
-
-  public static Error errorFromResponse(JSONObject response) {
-    Error errorCode = Error.Unknown;
-    if (response != null) {
-      try {
-        String codeString = response.getString("code");
-        if (codeString != null) {
-          if ("190".equals(codeString)) {
-            errorCode = Error.BadSystemToken;
-          }
-          else if ("INVALID_USER".equals(codeString)) {
-            errorCode = Error.UserDoesNotExist;
-          }
-          else if ("INVALID_PASSWORD".equals(codeString)) {
-            errorCode = Error.InvalidPassword;
-          }
-          else if ("NO_ACCESS".equals(codeString)) {
-            errorCode = Error.AccessNotGranted;
-          }
-          else if ("NO_ACCOUNT".equals(codeString)) {
-            errorCode = Error.AccountNotFound;
-          }
-          else if ("AUTHENTICATION_DISABLED".equals(codeString)) {
-            errorCode = Error.AuthenticationProviderNotEnabled;
-          }
-          else if ("INVALID_EMAIL".equals(codeString)) {
-            errorCode = Error.InvalidEmail;
-          }
-          else if ("EMAIL_TAKEN".equals(codeString)) {
-            errorCode = Error.EmailTaken;
-          }
-        }
-      }
-      catch (Exception e) {
-      }
-    }
-    return errorCode;
-  }
-
-  public static Error errorFromFirebaseError(FirebaseError error) {
-    Error errorCode = Error.Unknown;
-    if (error != null) {
-      switch (error.getCode()) {
-      case FirebaseError.DATA_STALE:
-        errorCode = Error.DataStale;
-        break;
-      case FirebaseError.OPERATION_FAILED:
-        errorCode = Error.OperationFailed;
-        break;
-      case FirebaseError.PERMISSION_DENIED:
-        errorCode = Error.PermissionDenied;
-        break;
-      case FirebaseError.DISCONNECTED:
-        errorCode = Error.Disconnected;
-        break;
-      case FirebaseError.PREEMPTED:
-        errorCode = Error.Preempted;
-        break;
-      case FirebaseError.EXPIRED_TOKEN:
-        errorCode = Error.ExpiredToken;
-        break;
-      case FirebaseError.INVALID_TOKEN:
-        errorCode = Error.InvalidToken;
-        break;
-      case FirebaseError.MAX_RETRIES:
-        errorCode = Error.MaxRetries;
-        break;
-      case FirebaseError.OVERRIDDEN_BY_SET:
-        errorCode = Error.OverriddenBySet;
-        break;
-      default:
-        errorCode = Error.Unknown;
-        break;
-      }
-    }
-    return errorCode;
   }
 
   // https://gist.github.com/codebutler/2339666

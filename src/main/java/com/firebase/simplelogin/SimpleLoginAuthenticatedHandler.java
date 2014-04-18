@@ -1,7 +1,5 @@
 package com.firebase.simplelogin;
 
-import com.firebase.simplelogin.enums.Error;
-
 /**
  * Handler for authentication callbacks.
  *
@@ -17,9 +15,9 @@ public interface SimpleLoginAuthenticatedHandler {
    * If user is null, no user is logged in.
    * If user is not null, there is a logged in user.
    *
-   * @param error Error for callback; will be null if no error.
+   * @param error FirebaseSimpleLoginError for callback; will be null if no error.
    * @param user The returned User object.
    */
-  public void authenticated(Error error, User user);
+  public void authenticated(FirebaseSimpleLoginError error, FirebaseSimpleLoginUser user);
 
 }
