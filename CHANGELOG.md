@@ -1,3 +1,10 @@
+v1.4.0
+-------------
+Release Date: 2014-04-18
+
+* Add support for `isTemporaryPassword` flag when logging in using the email / password provider ([#17](https://github.com/firebase/firebase-simple-login/issues/17))
+* Rename `User` and `Error` classes to `FirebaseSimpleLoginUser` and `FirebaseSimpleLoginError`, respectively
+
 v1.3.0
 -------------
 Release Date: 2014-03-06
