@@ -532,7 +532,20 @@ public class SimpleLogin {
             handler.completed(error, false);
           }
           else {
-            handler.completed(null, true);
+            try {
+              JSONObject errorDetails = data.has("error") ? data.getJSONObject("error") : null;
+              if(errorDetails != null) {
+                handler.completed(FirebaseSimpleLoginError.errorFromResponse(errorDetails), false);
+              }
+              else {
+                handler.completed(null, true);
+              }
+            }
+            catch(Exception e) {
+              e.printStackTrace();
+              FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(null);
+              handler.completed(theError, false);
+            }
           }
         }
       });

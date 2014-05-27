@@ -1,3 +1,9 @@
+v1.4.1
+-------------
+Release Date: 2014-05-26
+
+* Fix a bug where `changePassword` failed to surface an error when invoked with an incorrect password.
+
 v1.4.0
 -------------
 Release Date: 2014-04-18
