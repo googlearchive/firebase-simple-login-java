@@ -1,11 +1,14 @@
 package com.firebase.simplelogin;
 
+import android.text.TextUtils;
+
 import com.firebase.client.Firebase;
 import com.firebase.simplelogin.enums.Provider;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
@@ -16,7 +19,7 @@ class FirebaseUtils {
     try {
       xurl = new URL(ref.toString());
     }
-    catch (Exception e) {
+    catch (MalformedURLException e) {
       throw new IllegalArgumentException("Invalid Firebase reference: " + ref, e);
     }
     String namespace = null;
@@ -33,13 +36,8 @@ class FirebaseUtils {
   }
 
   public static Provider providerForString(String provider) {
-    if (provider != null) {
-      try {
-        return Provider.valueOf(provider.trim().toUpperCase());
-      }
-      catch (Exception e) {
-        return Provider.INVALID;
-      }
+    if (!TextUtils.isEmpty(provider)) {
+      return Provider.valueOf(provider.trim().toUpperCase());
     }
     else {
       return Provider.INVALID;

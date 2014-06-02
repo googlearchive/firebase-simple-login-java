@@ -1,9 +1,13 @@
 package com.firebase.simplelogin;
 
+import java.io.IOException;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.ParseException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -26,7 +30,11 @@ class JsonBasicResponseHandler implements ResponseHandler<JSONObject> {
         System.out.println(entityString);
         result = new JSONObject(entityString);
       }
-    } catch (Exception e) {
+    } catch (JSONException e) {
+      e.printStackTrace();
+    } catch (ParseException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
       e.printStackTrace();
     }
     return result;
