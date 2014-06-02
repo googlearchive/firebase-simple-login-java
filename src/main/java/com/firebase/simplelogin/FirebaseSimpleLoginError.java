@@ -2,6 +2,7 @@ package com.firebase.simplelogin;
 
 import com.firebase.client.FirebaseError;
 import com.firebase.simplelogin.enums.FirebaseSimpleLoginErrorCode;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -93,7 +94,9 @@ public class FirebaseSimpleLoginError {
           }
         }
       }
-      catch (Exception e) {
+      catch (JSONException e) {
+        // Invalid response. Default 'Unknown' error code will be used.
+        e.printStackTrace();
       }
     }
 

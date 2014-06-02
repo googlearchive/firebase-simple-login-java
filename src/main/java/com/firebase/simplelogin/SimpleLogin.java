@@ -44,8 +44,10 @@ import com.firebase.simplelogin.enums.FirebaseSimpleLoginErrorCode;
 import com.firebase.simplelogin.enums.Provider;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -168,7 +170,7 @@ public class SimpleLogin {
           JSONObject jsonObject = new JSONObject(jsonTokenData);
           attemptAuthWithData(jsonObject, handler);
         }
-        catch(Exception e) {
+        catch (JSONException e) {
           handler.authenticated(null, null);
         }
       }
@@ -200,7 +202,7 @@ public class SimpleLogin {
         handler.authenticated(FirebaseSimpleLoginError.errorFromResponse(null), null);
       }
     }
-    catch(Exception e) {
+    catch (JSONException e) {
       e.printStackTrace();
       handler.authenticated(FirebaseSimpleLoginError.errorFromResponse(null), null);
     }
@@ -247,7 +249,7 @@ public class SimpleLogin {
                 }
               }
             }
-            catch (Exception e) {
+            catch (JSONException e) {
               e.printStackTrace();
               FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(null);
               completionHandler.authenticated(theError, null);
@@ -301,7 +303,7 @@ public class SimpleLogin {
                 }
               }
             }
-            catch (Exception e) {
+            catch (JSONException e) {
               e.printStackTrace();
               FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(null);
               completionHandler.authenticated(theError, null);
@@ -371,7 +373,7 @@ public class SimpleLogin {
         }
       }
     }
-    catch (Exception e) {}
+    catch (JSONException e) {}
 
     // Save to shared prefs
     if(androidContext != null) {
@@ -383,7 +385,7 @@ public class SimpleLogin {
         jsonTokenData.put("userData", userData);
         editor.putString("jsonTokenData", jsonTokenData.toString());
       }
-      catch(Exception e) {
+      catch (JSONException e) {
         // TODO: log an error?
       }
       finally {
@@ -437,7 +439,7 @@ public class SimpleLogin {
                 completionHandler.authenticated(null, user);
               }
             }
-            catch (Exception e) {
+            catch (JSONException e) {
               e.printStackTrace();
               FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(null);
               completionHandler.authenticated(theError, null);
@@ -488,7 +490,7 @@ public class SimpleLogin {
                 handler.completed(null, true);
               }
             }
-            catch(Exception e) {
+            catch (JSONException e) {
               e.printStackTrace();
               FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(null);
               handler.completed(theError, false);
@@ -541,7 +543,7 @@ public class SimpleLogin {
                 handler.completed(null, true);
               }
             }
-            catch(Exception e) {
+            catch (JSONException e) {
               e.printStackTrace();
               FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(null);
               handler.completed(theError, false);
@@ -587,7 +589,7 @@ public class SimpleLogin {
                   handler.completed(null, true);
                 }
               }
-              catch(Exception e) {
+              catch (JSONException e) {
                 e.printStackTrace();
                 FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(null);
                 handler.completed(theError, false);
@@ -733,7 +735,7 @@ public class SimpleLogin {
                 }
               }
             }
-            catch (Exception e) {
+            catch (JSONException e) {
               e.printStackTrace();
               FirebaseSimpleLoginError theError = FirebaseSimpleLoginError.errorFromResponse(null);
               completionHandler.authenticated(theError, null);
@@ -763,7 +765,7 @@ public class SimpleLogin {
       try {
         result = httpClient.execute(httpGet, new JsonBasicResponseHandler());
       }
-      catch (Exception e) {
+      catch (IOException e) {
         e.printStackTrace();
       }
       return result;
