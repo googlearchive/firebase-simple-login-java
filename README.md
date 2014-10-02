@@ -90,6 +90,11 @@ authClient.loginWithEmail("email@example.com", "very secret", new SimpleLoginAut
 });
 ```
 
+## Version 1.x.x Documentation
+
+If you are using a deprecated 1.x.x client, [you can find documentation for it here](./docs/v1).
+
+
 ## Testing / Compiling From Source
 
 Interested in manually debugging from source, or submitting a pull request?
