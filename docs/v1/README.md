@@ -44,7 +44,7 @@ If you use Maven to build your application, you can add the following dependency
 
 ## API Reference
 
-[You can find a full API reference here.](./http://firebase.github.io/firebase-simple-login-java/apidocs/)
+[You can find a full API reference here.](https://firebase.github.io/firebase-simple-login-java/apidocs/)
 
 
 ## Authentication Providers
@@ -216,4 +216,4 @@ authClient.checkAuthStatus(new SimpleLoginAuthenticatedHandler() {
 
 ## API Reference
 
-[You can find a full API reference here.](./http://firebase.github.io/firebase-simple-login-java/apidocs/)
+[You can find a full API reference here.](https://firebase.github.io/firebase-simple-login-java/apidocs/)
