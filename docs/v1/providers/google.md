@@ -42,8 +42,8 @@ Now that the client is logged in, your [Security Rules](https://www.firebase.com
 | Field | Description | Type |
 | --- | --- | --- |
 | id | The user's Google id. | String |
-| provider | The authentication method used, in this case: 'google'. | String |
-| uid | A unique id combining the provider and id, intended as the unique key for user data (will have the format 'google:<id>'). | String |
+| provider | The authentication method used, in this case: `google`. | String |
+| uid | A unique id combining the provider and id, intended as the unique key for user data (will have the format `google:<id>`). | String |
 
 
 ## Example
