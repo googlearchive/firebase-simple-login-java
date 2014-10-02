@@ -1,4 +1,4 @@
-# Authenticating Users with Twitter - iOS
+# Authenticating Users with Twitter - Android
 
 
 ## Configuring Your Application
