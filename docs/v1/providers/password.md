@@ -51,7 +51,7 @@ The `User` instance will contain some basic metadata about the user account, inc
 
 ## After Authenticating
 
-Now that the client is logged in, your [Security Rules](https://www.firebase.com/docs/android/guide/securing-data.html) will have access to their unique user id. Specifically, the [`auth` variable](TODO) will contain the following values:
+Now that the client is logged in, your [Security Rules](https://www.firebase.com/docs/android/guide/securing-data.html) will have access to their unique user id. Specifically, the `auth` variable will contain the following values:
 
 | Field | Description | Type |
 | --- | --- | --- |
