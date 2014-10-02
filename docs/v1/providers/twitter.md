@@ -39,3 +39,8 @@ Now that the client is logged in, your [Security Rules](https://www.firebase.com
 | id | The user's Twitter id. | String |
 | provider | The authentication method used, in this case: `twitter`. | String |
 | uid | A unique id combining the provider and id, intended as the unique key for user data (will have the format `twitter:<id>`). | String |
+
+
+## Example
+
+There is an example Android app using Twitter authentication [available on Github](https://github.com/firebase/simple-login-demo-android).
