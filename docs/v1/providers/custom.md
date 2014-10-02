@@ -31,7 +31,7 @@ String token = tokenGenerator.createToken(payload);
 System.out.println(token);
 ```
 
-When authenticating with a secure JWT, the data encoded in the token will be accessible in the [Security Rules](https://www.firebase.com/docs/web/guide/securing-data.html) as the `auth` variable. This allows rules to be written which grant access based on the data within the token.
+When authenticating with a secure JWT, the data encoded in the token will be accessible in the [Security Rules](https://www.firebase.com/docs/android/guide/securing-data.html) as the `auth` variable. This allows rules to be written which grant access based on the data within the token.
 
 By default, authentication tokens expire 24 hours after they are issued and the client will automatically be unauthenticated at that time. We can override this by changing the Session Length setting on the Login & Auth tab of the Firebase's dashboard, or individually when creating the token by providing a specific expiration date (for details, see the docs for the specific token generator you're using).
 
@@ -102,7 +102,7 @@ If we're are running a trusted server that is connecting to Firebase, we can aut
 
 * __Using a secure JWT with the optional admin claim set to true:__ This method will grant a server complete read and write access to the entire Firebase. This token will expire normally, so it is important to set the expiration times accordingly.
 
-* __Using a secure JWT designed to give access to only the pieces of data a server needs to touch:__ This method is more complicated, but it is the safest way to authenticate a server, as it lets the [Security Rules](https://www.firebase.com/docs/web/guide/securing-data.html) prevent the server from doing anything it's not supposed to, even if it becomes compromised in some way.
+* __Using a secure JWT designed to give access to only the pieces of data a server needs to touch:__ This method is more complicated, but it is the safest way to authenticate a server, as it lets the [Security Rules](https://www.firebase.com/docs/android/guide/securing-data.html) prevent the server from doing anything it's not supposed to, even if it becomes compromised in some way.
 
 
 ## Generating a Secure Token Without a Helper Library
