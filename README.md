@@ -6,6 +6,18 @@ allowing you to authenticate users without any server code.
 
 Enable authentication via a number of third-party providers, anonymous login, or email / password authentication without having to manually store authentication credentials or run a server.
 
+## Deprecation Warning!
+
+Firebase Simple Login for Android is now a part of the core Firebase Android library. As a result,
+this standalone Simple Login client is being deprecated. We encourage everyone to upgrade to the
+latest version of the [Firebase Android Client](https://www.firebase.com/docs/android/) to get the
+latest and greatest features. If you are still using this deprecated Simple Login client,
+[you can find documentation for it here](./docs/v1).
+
+You can read more about this change [on our blog](TODO) and see the [updated login documentation](TODO)
+on our website. The updated documentation includes migration plans, but if you have any other
+questions, please reach out to us at support@firebase.com.
+
 ## Installation
 
 To install in your application, [download from the Firebase CDN](https://www.firebase.com/docs/downloads.html),
