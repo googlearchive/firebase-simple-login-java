@@ -59,7 +59,7 @@ Now that the client is logged in, your [Security Rules](https://www.firebase.com
 | --- | --- | --- |
 | id | The user's Facebook id. | String |
 | provider | The authentication method used, in this case: `facebook`. | String |
-| uid | A unique id combining the provider and id, intended as the unique key for user data (will have the format `facebook:<id>`). | String |
+| uid | A unique id combining the provider and id, intended as the unique key for user data. | String |
 
 
 ## Example

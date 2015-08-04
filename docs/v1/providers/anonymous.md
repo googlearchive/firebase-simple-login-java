@@ -33,7 +33,7 @@ Now that the client is logged in, your [Security Rules](https://www.firebase.com
 | --- | --- | --- |
 | id | The new, user-specific alphanumeric ID. | String |
 | provider | The authentication method used; in this case, `anonymous`. | String |
-| uid | A unique ID combining the provider and ID, intended as the user's unique key across all providers; will have the format `anonymous:<id>`. | String |
+| uid | A unique ID combining the provider and ID, intended as the user's unique key across all providers. | String |
 
 
 # Example
