@@ -19,7 +19,7 @@ Once your application has been setup to log users into Google, your application 
 To log a user in, you will need a Google OAuth access token returned by the login flow provided by the Google+ SDK:
 
 ```java
-SimpleLogin authClient = new SimpleLogin(myRef, getApplicationContex());
+SimpleLogin authClient = new SimpleLogin(myRef, getApplicationContext());
 authClient.loginWithGoogle("<ACCESS-TOKEN>", new SimpleLoginAuthenticatedHandler() {
   public void authenticated(FirebaseSimpleLoginError error, FirebaseSimpleLoginUser user) {
     if (error != null) {
