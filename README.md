@@ -16,7 +16,7 @@ latest and greatest features. If you are still using this deprecated Simple Logi
 
 You can read more about this change [on our blog](https://www.firebase.com/blog/2014-10-03-major-updates-to-firebase-user-auth.html) and see the [updated login documentation](https://www.firebase.com/docs/android/guide/user-auth.html)
 on our website. The updated documentation includes migration plans, but if you have any other
-questions, please reach out to us at support@firebase.com.
+questions, [please reach out to us](https://firebase.google.com/support/).
 
 ## Installation
 
