@@ -1,3 +1,8 @@
+# Status: Archived
+This repository has been archived and is no longer maintained.
+
+![status: inactive](https://img.shields.io/badge/status-inactive-red.svg)
+
 # Firebase Simple Login - Android Client
 
 Firebase Simple Login is a simple, easy-to-use authentication service built on
