@@ -32,7 +32,7 @@ or install as a Maven dependency:
 <dependency>
   <groupId>com.firebase</groupId>
   <artifactId>firebase-simple-login</artifactId>
-  <version>[1.4.0,)</version>
+  <version>1.4.2</version>
 </dependency>
 ```
 
